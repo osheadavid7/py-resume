@@ -1,6 +1,7 @@
 ###############
 #ignore temps
 *~
+*__pycache__/
 
 ###############
 #Keep it secret, keep it safe!
