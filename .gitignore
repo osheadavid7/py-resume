@@ -1,0 +1,7 @@
+###############
+#ignore temps
+*~
+
+###############
+#Keep it secret, keep it safe!
+secrets.py
