@@ -28,7 +28,7 @@ def fetch_newest_data():
 
 def write_all_to_file(lists,texts):
     for (i,j) in  zip(lists,texts):
-        print i,j
+        # print i,j
         f = open(j,'w')
         f.write(i)
         f.close()
@@ -68,25 +68,67 @@ def save_ed(fname='edu.tex',vals=education['values']):
 
 
 def cv_entry(eventry):
-    ent='\{cventry}'
+    ent='\cventry'
     tmp=''
+
+    leni=0
+    #Handle years active
+    tmp+='{'+str(eventry['startDate']['year'])+'--'
+    tmp+=str(eventry['endDate']['year'])+'}'
+    ent+=tmp
+    leni+=1
+
+    #loop over items
     for i in eventry:
-        print i
-        if i=='startDate':
-            tmp+='{'+str(eventry[i]['year'])+'--'
-        elif i=='endDate':
-            tmp+=str(eventry[i]['year'])+'}'
-            ent+=tmp
+        if i=='startDate' or i=='endDate':
+            pass
         else:
             ent+='{'+str(eventry[i])+'}'
+            leni+=1
+    for i in range(6-leni):
+        ent+='{}'
     return ent
 
-def save_ed2(fname='edu.tex',vals=education['values'],section='Education'):
+def gen_sec(fname='edu.tex',vals=education['values'],section='Education'):
     edu_tex = "\section{"+section+"}\n"
     for entry1 in vals:
         edu_tex+=cv_entry(entry1)
         edu_tex+='\n'
+        
+    return edu_tex
+    # f=open(fname,'w')
+    # f.write(edu_tex)
+    # f.close()
+
+
+def set_preamble():
+    #define preamble for cv
+    preamble = "\\documentclass[11pt,a4paper]{moderncv}\n\\moderncvtheme[blue]{classic}\n\\usepackage[T1]{fontenc}\n\\usepackage[utf8x]{inputenc}\n\\usepackage[croatian]{babel}\n\\usepackage[scale=0.8]{geometry}\n\\recomputelengths\n\\fancyfoot{}\n\\fancyfoot[LE,RO]{\\thepage}\n\\fancyfoot[RE,LO]{\\footnotesize }"
     
-    f=open(fname,'w')
-    f.write(edu_tex)
+    return preamble
+
+def personal_data(names):
+    #personal data
+    personal_data = "\\firstname{"+names[0]+"}\n"+"\\familyname{"+names[1]+"}\n"+"\\title{Curriculum Vitae}\n"+"\\address{<Address Street>}{Midleton}\n"+"\\mobile{<Mobile number>}\n"+"\\phone{<Phone number>}\n"+"\\fax{<Fax number>}\n"+"\\email{<E-mail>}\n"
+    #%\extrainfo{additional information (optional)}
+    #%\photo[84pt]{placeholder.jpg}\n"
+
+    return personal_data
+
+def quote(qref='1'):
+    q="\\quote{\"Success is the ability to go from failure to failure without losing your enthusiasm.\" -- Winston Churchill\"}"
+    return q
+
+
+def main_tex():
+    tex1 = ''
+    tex1 += set_preamble()
+    tex1 += personal_data(names)
+    tex1 += '\\begin{document}\n'
+    tex1 += '\\maketitle\n'
+    tex1 += gen_sec()
+    tex1 += '\\end{document}\n'
+
+    f=open('cv1.tex','w')
+    f.write(tex1)
     f.close()
