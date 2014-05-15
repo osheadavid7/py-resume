@@ -3,6 +3,12 @@
 *~
 *__pycache__/
 *.pyc
+*.aux
+*.log
+*.out
+*.pdf
+*.csv
+*.txt
 
 ###############
 #Keep it secret, keep it safe!
