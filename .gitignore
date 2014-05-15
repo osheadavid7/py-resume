@@ -2,6 +2,7 @@
 #ignore temps
 *~
 *__pycache__/
+*.pyc
 
 ###############
 #Keep it secret, keep it safe!
