@@ -22,7 +22,7 @@ def fetch_newest_data():
     application = linkedin.LinkedInApplication(authentication)
     
     # Use the app....
-    app_data=application.get_profile(selectors=['id', 'first-name', 'last-name', 'location', 'distance', 'num-connections', 'skills', 'educations','interests'])
+    app_data=application.get_profile(selectors=['id', 'first-name', 'last-name', 'location', 'distance', 'num-connections', 'skills', 'educations','interests','honors-awards','num-recommenders'])
     return app_data
 
 
@@ -49,6 +49,10 @@ skills = [skill['skill']['name'] for skill in skill_list['values']]
 interests_lists = app_data['interests']
 interests = interests_lists.split(',')
 
+#strip honours:
+awards_list =  app_data['honorsAwards']
+awards = [award for award in awards_list['values']]
+
 
 #write_all_to_file([education,skills,interests],['edu.txt','skill.txt','ints.txt'])
 def process_ed(entry1):
@@ -66,39 +70,62 @@ def save_ed(fname='edu.tex',vals=education['values']):
     f.write(edu_tex)
     f.close()
 
+def years_active(eventry):
+    tmp=''
+    if 'startDate' in [i for i in eventry]:
+        tmp+='{'+str(eventry['startDate']['year'])+'--'
+        tmp+=str(eventry['endDate']['year'])+'}'
 
-def cv_entry(eventry):
+    #Awards do not have year active, but need to avoid title put in year..
+    else:
+        tmp+='{}'
+
+    return tmp
+
+def cv_entry(eventry,black_list=[]):
+    #Initialize
     ent='\cventry'
     tmp=''
-
+    #Treack length of entry
     leni=0
+
     #Handle years active
-    tmp+='{'+str(eventry['startDate']['year'])+'--'
-    tmp+=str(eventry['endDate']['year'])+'}'
-    ent+=tmp
+    ent+=years_active(eventry)
     leni+=1
+
+    #items to ignore...
+    black_list.append('startDate')
+    black_list.append('endDate')
 
     #loop over items
     for i in eventry:
-        if i=='startDate' or i=='endDate':
+        if i in black_list:
             pass
         else:
             ent+='{'+str(eventry[i])+'}'
             leni+=1
+
+    #make sure entry is long enough. Need atleast 5 entries to avoid prompt.
     for i in range(6-leni):
         ent+='{}'
+
     return ent
 
-def gen_sec(fname='edu.tex',vals=education['values'],section='Education'):
+def gen_sec(fname='edu.tex',vals=education['values'],section='Education',black_list=['id'],sv=False):
     edu_tex = "\section{"+section+"}\n"
     for entry1 in vals:
-        edu_tex+=cv_entry(entry1)
+        edu_tex+=cv_entry(entry1,black_list)
         edu_tex+='\n'
         
+    #Optionally save to tex.
+    if sv==True:
+        f=open(fname,'w')
+        f.write(edu_tex)
+        f.close()
+
+
     return edu_tex
-    # f=open(fname,'w')
-    # f.write(edu_tex)
-    # f.close()
+
 
 
 def set_preamble():
@@ -124,9 +151,17 @@ def main_tex():
     tex1 = ''
     tex1 += set_preamble()
     tex1 += personal_data(names)
+
     tex1 += '\\begin{document}\n'
+
     tex1 += '\\maketitle\n'
+
+    #Education
     tex1 += gen_sec()
+    
+    #Awards
+    tex1 += gen_sec(fname='awa.tex',vals=awards_list['values'],section='Awards and Honours',black_list=['id'])
+
     tex1 += '\\end{document}\n'
 
     f=open('cv1.tex','w')
