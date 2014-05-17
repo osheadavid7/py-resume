@@ -6,6 +6,9 @@ import urllib
 #Import secrets
 from secrets import secret
 
+#Info I don't want on Linkedin, but want on a submitted CV:
+from person_info import person_info
+
 #######################
 #Load auth keys
 CONSUMER_KEY = secret['API_KEY']
@@ -134,9 +137,9 @@ def set_preamble():
     
     return preamble
 
-def personal_data(names):
+def personal_data(names,person_info):
     #personal data
-    personal_data = "\\firstname{"+names[0]+"}\n"+"\\familyname{"+names[1]+"}\n"+"\\title{Curriculum Vitae}\n"+"\\address{<Address Street>}{Midleton}\n"+"\\mobile{<Mobile number>}\n"+"\\phone{<Phone number>}\n"+"\\fax{<Fax number>}\n"+"\\email{<E-mail>}\n"
+    personal_data = "\\firstname{"+names[0]+"}\n"+"\\familyname{"+names[1]+"}\n"+"\\title{Curriculum Vitae}\n"+"\\address{Midleton}\n"+"\\mobile{"+person_info['mob_num']+"}\n"+"\\phone{<Phone number>}\n"+"\\fax{<Fax number>}\n"+"\\email{"+person_info['email']+"}\n"
     #%\extrainfo{additional information (optional)}
     #%\photo[84pt]{placeholder.jpg}\n"
 
@@ -148,9 +151,11 @@ def quote(qref='1'):
 
 
 def main_tex():
+    #Write tex file.
+
     tex1 = ''
     tex1 += set_preamble()
-    tex1 += personal_data(names)
+    tex1 += personal_data(names,person_info)
 
     tex1 += '\\begin{document}\n'
 
