@@ -1,6 +1,15 @@
-Uses: python linkedin api (not python3 port)
+README
+=============
 
+Requries:
+-------
+python-inkedin url = git@github.com:ozgur/python-linkedin.git
+python2.7
+
+About
+-------
 This project is used to render a cv based on a users profile on Linkedin.
+
 Linkedin have a resume builder but currently it does not work well with Honours and Awards.
 Furthermore, the current selection do not look very appealling and I would rather a LaTex style on my resume.
 
@@ -13,6 +22,7 @@ David
 
 
 Current issues/failings:
+---------------------
 	As of May 17 2014, Linkedin Api does not return full data on 'HonorsAwards'. Year of award and description is missing! May need to fill in some blanks...
 
 	Yet to implement GitHub
