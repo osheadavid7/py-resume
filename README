@@ -6,6 +6,12 @@ Requries:
 python-inkedin url = git@github.com:ozgur/python-linkedin.git
 python2.7
 
+Use:
+-------
+secrets.py: create a py with your linkedin api keys in here. This is not tracked by git for security reasons
+person_info.py: create this file if you wish to include data in your CV/resume that is not available on the web. Example: personal mobile number.
+
+
 About
 -------
 This project is used to render a cv based on a users profile on Linkedin.
