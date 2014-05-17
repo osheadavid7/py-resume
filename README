@@ -1,3 +1,5 @@
+Uses: python linkedin api (not python3 port)
+
 This project is used to render a cv based on a users profile on Linkedin.
 Linkedin have a resume builder but currently it does not work well with Honours and Awards.
 Furthermore, the current selection do not look very appealling and I would rather a LaTex style on my resume.
