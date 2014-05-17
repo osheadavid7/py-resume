@@ -32,6 +32,4 @@ Current issues/failings:
 ---------------------
 As of May 17 2014, Linkedin Api does not return full data on 'HonorsAwards'. Year of award and description is missing! May need to fill in some blanks...
 
-Yet to implement GitHub
-
 Yet to implement Google Scholar
