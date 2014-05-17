@@ -29,7 +29,7 @@ def fetch_newest_data():
     return app_data
 
 
-def return_tidy_data():
+def return_tidy_ln_data():
     #Fetch current profile
     app_data = fetch_newest_data() 
 

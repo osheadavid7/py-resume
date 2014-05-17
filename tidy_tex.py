@@ -9,14 +9,12 @@ def write_all_to_file(lists,texts):
 
 #write_all_to_file([education,skills,interests],['edu.txt','skill.txt','ints.txt'])
 def process_ed(entry1):
-   # print "\section{Education}"
     return "\cventry{"+str(entry1['startDate']['year'])+"--"+str(entry1['endDate']['\
 year'])+"}{"+str(entry1['degree'])+"}{"+str(entry1['schoolName'])+"}{"+str(entry1['f\
 ieldOfStudy'])+"}"
 
 
 def save_ed():
-    #fname='edu.tex',vals=education['values']
     edu_tex = "\section{Education}\n"
     for entry1 in vals:
         edu_tex+=process_ed(entry1)
@@ -26,9 +24,10 @@ def save_ed():
     f.write(edu_tex)
     f.close()
 
-def years_active(eventry):
+def years_active(eventry,black_list):
     tmp=''
-    if 'startDate' in [i for i in eventry]:
+    all_i = [i for i in eventry]
+    if 'startDate' in all_i:
         tmp+='{'+str(eventry['startDate']['year'])+'--'
         tmp+=str(eventry['endDate']['year'])+'}'
 
@@ -38,20 +37,45 @@ def years_active(eventry):
 
     return tmp
 
-def cv_entry(eventry,black_list=[]):
+def cv_entry(eventry,first_lab,black_list,fmt):
     #Initialize
-    ent='\cventry'
+    if fmt == '':
+        ent='\cventry'
+        nl=''
+    elif fmt == 'mycventry':
+        ent = '\mycventry'
+    else:
+        ent='\cvline'
+        nl='\\newline '
+
     tmp=''
+
     #Treack length of entry
     leni=0
+    all_i  = [i for i in eventry]
 
-    #Handle years active
-    ent+=years_active(eventry)
-    leni+=1
-
-    #items to ignore...
-    black_list.append('startDate')
-    black_list.append('endDate')
+    if first_lab == 'year':
+        #Handle years active
+        ent+=years_active(eventry,black_list)
+        leni+=1
+        #items to ignore...
+        black_list.append('startDate')
+        black_list.append('endDate')
+   
+    elif first_lab in all_i:
+        # print 'here'
+        # print eventry[first_lab]
+        ent+='{'+eventry[first_lab]+'}'
+        #add first_lab to ignore
+        black_list.append(first_lab)
+    
+    else:
+        #If no matching tag found, use tag passed. 
+        if 'scholarship' in eventry['name'].lower():
+            ent += '{Scholarship}'
+        
+        if 'title' in eventry['name'].lower():
+            ent += '{Title}'
 
     #loop over items
     for i in eventry:
@@ -66,40 +90,11 @@ def cv_entry(eventry,black_list=[]):
         ent+='{}'
 
     return ent
-def cv_entry(eventry,black_list=[]):
-    #Initialize
-    ent='\cventry'
-    tmp=''
-    #Treack length of entry
-    leni=0
 
-    #Handle years active
-    ent+=years_active(eventry)
-    leni+=1
-
-    #items to ignore...
-    black_list.append('startDate')
-    black_list.append('endDate')
-
-    #loop over items
-    for i in eventry:
-        if i in black_list:
-            pass
-        else:
-            ent+='{'+str(eventry[i])+'}'
-            leni+=1
-
-    #make sure entry is long enough. Need atleast 5 entries to avoid prompt.
-    for i in range(6-leni):
-        ent+='{}'
-
-    return ent
-
-def gen_sec(fname,vals,section,black_list=[],sv=False):
-    #fname='edu.tex',vals=education['values'],section='Education',black_list=['id'],sv=False):
+def gen_sec(section,vals,first_lab,black_list,sv,fname,fmt):
     edu_tex = "\section{"+section+"}\n"
     for entry1 in vals:
-        edu_tex+=cv_entry(entry1,black_list)
+        edu_tex+=cv_entry(entry1,first_lab,black_list,fmt)
         edu_tex+='\n'
 
     #Optionally save to tex.
@@ -133,3 +128,23 @@ email']+"}\n"
     #%\photo[84pt]{placeholder.jpg}\n"
 
     return personal_data
+
+
+def to_tex(tex_command,params):
+    a = "\\"+tex_command
+    for par in params:
+        a += "{"+par+"}"
+    return a
+
+def custom_func():
+    tex1 = "\\newcommand*{\mycventry}[7][.25em]{%\n"\
+           "\cvitem[#1]{#2}{%\n"\
+           "{\\bfseries\\href{#3}{#3}}%\n"\
+           "\ifthenelse{\equal{#4}{}}{}{.\\newline #4}%\n"\
+           "\ifthenelse{\equal{#5}{}}{}{.\\newline #5}%\n"\
+           "\ifthenelse{\equal{#6}{}}{}{.\\newline #6}%\n"\
+           ".\strut%\n"\
+           "\ifx&#7&%\n"\
+           "  \else{\\newline{}\\begin{minipage}[t]{\linewidth}\small#7\end{minipage}}\\fi}}"
+    
+    return tex1
