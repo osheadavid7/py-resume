@@ -10,7 +10,7 @@ def get_github_user(secret):
     #Only include public repos
     for r in repos:
         if r.private==False:
-            print r.name
+            #print r.name
             pub_repos.append(r)
 
     return user,pub_repos
