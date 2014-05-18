@@ -2,7 +2,6 @@
 
 def write_all_to_file(lists,texts):
     for (i,j) in  zip(lists,texts):
-        # print i,j
         f = open(j,'w')
         f.write(i)
         f.close()
@@ -63,8 +62,6 @@ def cv_entry(eventry,first_lab,black_list,fmt):
         black_list.append('endDate')
    
     elif first_lab in all_i:
-        # print 'here'
-        # print eventry[first_lab]
         ent+='{'+eventry[first_lab]+'}'
         #add first_lab to ignore
         black_list.append(first_lab)
