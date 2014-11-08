@@ -28,7 +28,16 @@ def years_active(eventry,black_list):
     all_i = [i for i in eventry]
     if 'startDate' in all_i:
         tmp+='{'+str(eventry['startDate']['year'])+'--'
-        tmp+=str(eventry['endDate']['year'])+'}'
+
+        #Previous positions and education have end date...
+        if 'endDate' in all_i:
+            tmp+=str(eventry['endDate']['year'])+'}'
+
+        #Current positions have no end date...
+        elif 'isCurrent' in all_i:
+            tmp+=str('Now')+'}'
+
+
 
     #Awards do not have year active, but need to avoid title put in year..
     else:
@@ -37,7 +46,7 @@ def years_active(eventry,black_list):
     return tmp
 
 def cv_entry(eventry,first_lab,black_list,fmt):
-    #Initialize
+    #Initialise format style
     if fmt == '':
         ent='\cventry'
         nl=''
@@ -49,7 +58,7 @@ def cv_entry(eventry,first_lab,black_list,fmt):
 
     tmp=''
 
-    #Treack length of entry
+    #Track length of entry
     leni=0
     all_i  = [i for i in eventry]
 
@@ -74,10 +83,15 @@ def cv_entry(eventry,first_lab,black_list,fmt):
         if 'title' in eventry['name'].lower():
             ent += '{Title}'
 
+
     #loop over items
     for i in eventry:
         if i in black_list:
             pass
+
+        elif i=='company':
+            ent+='{'+str(eventry['company']['name'])+'}'
+
         else:
             ent+='{'+str(eventry[i])+'}'
             leni+=1
@@ -89,6 +103,7 @@ def cv_entry(eventry,first_lab,black_list,fmt):
     return ent
 
 def gen_sec(section,vals,first_lab,black_list,sv,fname,fmt):
+    #section name, array or entries,
     edu_tex = "\section{"+section+"}\n"
     for entry1 in vals:
         edu_tex+=cv_entry(entry1,first_lab,black_list,fmt)
@@ -111,6 +126,7 @@ def set_preamble():
 ic}\n\\usepackage[T1]{fontenc}\n\\usepackage[utf8x]{inputenc}\n\\usepackage[croatian\
 ]{babel}\n\\usepackage[scale=0.8]{geometry}\n\\recomputelengths\n\\fancyfoot{}\n\\fa\
 ncyfoot[LE,RO]{\\thepage}\n\\fancyfoot[RE,LO]{\\footnotesize }"
+    preamble+="\definecolor{airforceblue}{rgb}{0.36, 0.54, 0.66}"
 
     return preamble
 

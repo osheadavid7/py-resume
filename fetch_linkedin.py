@@ -25,7 +25,7 @@ def fetch_newest_data():
     application = linkedin.LinkedInApplication(authentication)
     
     # Use the app....
-    app_data=application.get_profile(selectors=['id', 'first-name', 'last-name', 'location', 'distance', 'num-connections', 'skills', 'educations','interests','honors-awards','num-recommenders'])
+    app_data=application.get_profile(selectors=['id', 'first-name', 'last-name', 'location', 'distance', 'num-connections', 'skills', 'educations','interests','honors-awards','num-recommenders','positions'])
     return app_data
 
 
@@ -49,4 +49,6 @@ def return_tidy_ln_data():
     awards_list =  app_data['honorsAwards']
     awards = [award for award in awards_list['values']]
 
-    return names,education,skills,interests,awards
+    positions = [pos for pos in app_data['positions']['values']]
+
+    return names,education,skills,interests,awards,positions
