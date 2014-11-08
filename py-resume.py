@@ -28,7 +28,7 @@ tex1 += '\\maketitle\n'
 tex1 +='\\textcolor{airforceblue}{\\rule{\\textwidth}{1pt}}'
 
 #Work experience
-tex1 += gen_sec('Experience',positions[0:3],'year',['id','isCurrent'],False,'pos.tex','mycventry')
+tex1 += gen_sec('Experience',positions,'year',['id','isCurrent'],False,'pos.tex','mycventry')
 
 
 #Education
@@ -38,7 +38,7 @@ tex1 += gen_sec('Education',education['values'],'year',['id'],False,'edu.tex',''
 tex1 += gen_sec('Awards and Honours',awards[0:2],'',['id'],False,'awa.tex','')
 
 #GitHub
-tex1 += gen_sec('Code',repo_list[0:-1],'name',['id'],False,'gh.tex','mycventry')
+tex1 += gen_sec('Code',[repo_list[0],repo_list[2]],'name',['id'],False,'gh.tex','mycventry')
 
 
 tex1 += '\\end{document}\n'
